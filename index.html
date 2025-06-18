@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>给你的一封情书</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Ma Shan Zheng', cursive;
+      background: linear-gradient(to top, #ffe6e6, #fff);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 48px;
+      color: #e60073;
+      margin-top: 40px;
+    }
+
+    p {
+      font-size: 24px;
+      color: #333;
+      max-width: 600px;
+      margin: 20px auto;
+      line-height: 1.6;
+    }
+
+    .heart {
+      font-size: 100px;
+      color: red;
+      animation: beat 1s infinite;
+      margin: 20px 0;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .slider {
+      margin-top: 40px;
+    }
+
+    .slider img {
+      width: 80%;
+      max-width: 500px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      animation: fade 4s infinite alternate;
+    }
+
+    @keyframes fade {
+      from { opacity: 0.5; }
+      to { opacity: 1; }
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 10px 30px;
+      font-size: 24px;
+      background-color: #ff4d88;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #e60073;
+    }
+
+    /* Sakura canvas to avoid overlapping other content */
+    canvas {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 🌸 背景音乐 -->
+  <audio autoplay loop>
+    <source src="music/love.mp3" type="audio/mpeg">
+    您的浏览器不支持音频播放。
+  </audio>
+
+  <h1>我有话想对你说 ❤️</h1>
+  <p>从我们第一次聊天开始，我就知道你对我来说很特别。</p>
+  <p>每一次见面、每一次微笑，都是我心中最温暖的记忆。</p>
+  <p>所以今天我鼓起勇气问你——</p>
+
+  <div class="heart">❤️</div>
+
+  <!-- 🖼️ 照片轮播（可替换图片路径） -->
+  <div class="slider">
+    <img src="images/photo1.jpg" alt="回忆1" id="slider-image">
+  </div>
+
+  <!-- ❤️ 表白按钮 -->
+  <button onclick="showLove()">你愿意做我的女朋友吗？</button>
+
+  <!-- 🍃 Sakura JS 动态背景 -->
+  <script src="https://cdn.jsdelivr.net/npm/sakura-js/dist/sakura.min.js"></script>
+  <script>
+    new Sakura('body');
+
+    // 图片轮播 JS
+    const images = ['images/photo1.jpg', 'images/photo2.jpg', 'images/photo3.jpg'];
+    let current = 0;
+    setInterval(() => {
+      current = (current + 1) % images.length;
+      document.getElementById('slider-image').src = images[current];
+    }, 3000);
+
+    // 弹窗表白成功
+    function showLove() {
+      alert("我好开心你点了这个按钮！我们一起走下去吧 ❤️");
+    }
+  </script>
+</body>
+</html>
