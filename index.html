@@ -5,15 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>给你的一封情书</title>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
-  
+
+  <!-- 烟花 CSS -->
   <style>
     body {
-      font-family: 'Ma Shan Zheng', cursive;
-      background: linear-gradient(to top, #ffe6e6, #fff);
       margin: 0;
       padding: 0;
+      overflow: hidden;
+      font-family: 'Ma Shan Zheng', cursive;
+      background: #000;
+    }
+
+    #fireworks {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: black;
+      z-index: 9999;
+    }
+
+    #main-content {
+      display: none;
       text-align: center;
-      overflow-x: hidden;
+      background: linear-gradient(to top, #ffe6e6, #fff);
+      padding-bottom: 50px;
     }
 
     h1 {
@@ -42,10 +59,6 @@
       50% { transform: scale(1.2); }
     }
 
-    .slider {
-      margin-top: 40px;
-    }
-
     .slider img {
       width: 80%;
       max-width: 500px;
@@ -68,16 +81,14 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
     button:hover {
       background-color: #e60073;
     }
 
-    /* Sakura canvas to avoid overlapping other content */
     canvas {
-      position: fixed !important;
+      position: fixed;
       top: 0;
       left: 0;
       pointer-events: none;
@@ -87,44 +98,89 @@
 </head>
 
 <body>
-  <!-- 🌸 背景音乐 -->
+  <!-- 🎆 烟花开场容器 -->
+  <div id="fireworks"></div>
+
+  <!-- 🎶 背景音乐 -->
   <audio autoplay loop>
     <source src="music/love.mp3" type="audio/mpeg">
     您的浏览器不支持音频播放。
   </audio>
 
-  <h1>我有话想对你说 ❤️</h1>
-  <p>从我们第一次聊天开始，我就知道你对我来说很特别。</p>
-  <p>每一次见面、每一次微笑，都是我心中最温暖的记忆。</p>
-  <p>所以今天我鼓起勇气问你——</p>
+  <!-- 🌸 正文内容 -->
+  <div id="main-content">
+    <h1>我有话想对你说 ❤️</h1>
+    <p>从我们第一次聊天开始，我就知道你对我来说很特别。</p>
+    <p>每一次见面、每一次微笑，都是我心中最温暖的记忆。</p>
+    <p>所以今天我鼓起勇气问你——</p>
 
-  <div class="heart">❤️</div>
+    <div class="heart">❤️</div>
 
-  <!-- 🖼️ 照片轮播（可替换图片路径） -->
-  <div class="slider">
-    <img src="images/photo1.jpg" alt="回忆1" id="slider-image">
+    <div class="slider">
+      <img src="images/photo1.jpg" alt="回忆" id="slider-image">
+    </div>
+
+    <button onclick="showLove()">你愿意做我的女朋友吗？</button>
   </div>
 
-  <!-- ❤️ 表白按钮 -->
-  <button onclick="showLove()">你愿意做我的女朋友吗？</button>
-
-  <!-- 🍃 Sakura JS 动态背景 -->
+  <!-- 🌸 Sakura JS 飘樱花 -->
   <script src="https://cdn.jsdelivr.net/npm/sakura-js/dist/sakura.min.js"></script>
   <script>
-    new Sakura('body');
-
-    // 图片轮播 JS
-    const images = ['images/photo1.jpg', 'images/photo2.jpg', 'images/photo3.jpg'];
-    let current = 0;
-    setInterval(() => {
-      current = (current + 1) % images.length;
-      document.getElementById('slider-image').src = images[current];
-    }, 3000);
-
-    // 弹窗表白成功
     function showLove() {
       alert("我好开心你点了这个按钮！我们一起走下去吧 ❤️");
     }
+
+    // 图片轮播
+    const images = ['images/photo1.jpg', 'images/photo2.jpg', 'images/photo3.jpg'];
+    let current = 0;
+    setInterval(() => {
+      if (document.getElementById('main-content').style.display === 'block') {
+        current = (current + 1) % images.length;
+        document.getElementById('slider-image').src = images[current];
+      }
+    }, 3000);
+
+    // 开场烟花插件
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/fireworks-js@2.10.2/dist/fireworks.js";
+    script.onload = () => {
+      const container = document.getElementById('fireworks');
+      const fireworks = new Fireworks.default(container, {
+        autoresize: true,
+        opacity: 0.9,
+        acceleration: 1.05,
+        friction: 0.97,
+        gravity: 1.5,
+        particles: 50,
+        trace: 3,
+        explosion: 5,
+        intensity: 30,
+        flickering: 50,
+        lineStyle: 'round',
+        hue: {
+          min: 0,
+          max: 360
+        },
+        delay: {
+          min: 10,
+          max: 20
+        },
+        rocketsPoint: {
+          min: 0,
+          max: 100
+        }
+      });
+      fireworks.start();
+
+      // 停止烟花并显示正文内容（5秒后）
+      setTimeout(() => {
+        fireworks.stop();
+        document.getElementById("fireworks").remove();
+        document.getElementById("main-content").style.display = "block";
+        new Sakura('body');
+      }, 5000);
+    };
+    document.body.appendChild(script);
   </script>
 </body>
 </html>
