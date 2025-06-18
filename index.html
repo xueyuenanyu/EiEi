@@ -9,8 +9,8 @@
 
     body {
       font-family: 'Courier New', monospace;
-      background-color: #000;
-      color: #fff;
+      background-color: #fff0f5;
+      color: #333;
       overflow: hidden;
       height: 100vh;
       display: flex;
@@ -19,49 +19,76 @@
       position: relative;
     }
 
-    #curtain {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: linear-gradient(to right, #ff4d88 50%, #ff4d88 50%);
-      z-index: 10;
+    #envelope {
+      width: 200px;
+      height: 150px;
+      background: #ff69b4;
+      border-radius: 8px;
+      position: relative;
       cursor: pointer;
-      transition: all 2s ease;
+      transition: all 1s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    #envelope::before {
+      content: "💌";
+      font-size: 48px;
+    }
+
+    #envelope span {
+      font-size: 18px;
+      margin-top: 10px;
+      color: white;
     }
 
     #text {
-      font-size: 36px;
+      font-size: 24px;
       white-space: pre-wrap;
-      padding: 40px;
+      padding: 30px;
       max-width: 90%;
       text-align: center;
-      line-height: 1.6;
+      line-height: 1.8;
       z-index: 1;
       opacity: 0;
       transition: opacity 1s ease;
+      position: relative;
     }
 
-    .fade-away {
-      animation: fadeOut 2s forwards;
+    .heart {
+      position: absolute;
+      color: pink;
+      font-size: 14px;
+      pointer-events: none;
+      animation: floatUp 1s ease-out forwards;
     }
 
-    @keyframes fadeOut {
-      0% { opacity: 1; transform: scale(1); }
-      100% { opacity: 0; transform: translateY(-20px) scale(0.8); }
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-40px) scale(1.5);
+      }
     }
   </style>
 </head>
 <body>
-  <div id="curtain" onclick="openCurtain()"></div>
+  <div id="envelope" onclick="openEnvelope()">
+    <span>点我打开</span>
+  </div>
   <div id="text"></div>
 
   <script>
     const firstMessage = "宝贝ကို哥哥ရဲ့ဘ၀မှကြိုဆိုပါတယ်❤️";
     const loveLetter = `
 哥哥တို Grade 9 မှာတွေ့ဖူးတယ်။
-အဲဒီတုန်းက哥哥တိုအချင်းချင်းသတိမထားခဲ့မိကြဘူး။
+အဲဒီတုန်းက哥哥တိုအချင်းချင်းသတိမထားခဲ့မိကြဘူး。
 
 နောက်မှာတော့ 哥哥တိုဟာ မတူတဲ့လမ်းခရီးမျိုးစုံကို သွားခဲ့ရတယ် ကိုယ်စီဘ၀ပုံပြင်တွေနဲ့။ဒါပေမယ့် ကံက 哥哥နဲ့ 宝贝ကို ပြန်လည်တွေ့စေခဲ့တယ်။တစ်မြိုတည်းမှာဆိုပေမဲ့ သူငယ်ချင်းတစ်ဦးကြောင့်၊ 哥哥 နဲ့ 宝贝 ပြန်တွေ့ခဲ့တယ်။
 
@@ -69,52 +96,62 @@
 ဒါပေမယ့် တစ်ခုတော့သိတယ် —
 宝贝နဲ့ စကားစပြောတဲ့အချိန်ကစပြီး 宝贝က哥哥ရဲ့စိတ်ထဲတစ်ဖြည်းဖြည်းရောက်လာ
 
-哥哥က宝贝ကိုတစ်ဖြည်းဖြည်းနဲ့ပိုပိုချစ်လာပြီ🎈။
-宝贝ရဲ့အသံ၊ 宝贝ရဲ့အပြုံး… 宝贝ဆိုတာနဲ့ကိုအရမ်းတယ်။
+哥哥က宝贝ကိုတစ်ဖြည်းဖြည်းနဲ့ပိုပိုချစ်လာပြီ🎈。
+宝贝ရဲ့အသံ၊ 宝贝ရဲ့အပြုံး… 宝贝ဆိုတာနဲ့ကိုအရမ်းတယ်。
 
 哥哥 宝贝နဲ့အတူ ခရီးသွားချင်တယ် —🩷
 宝贝နဲ့အတူတူကမ္ဘာပတ်ချင်တယ်။
-မြိုတော်တော်တွေ၊ ပင်လယ်ကမ်းခြေ၊ နေဝင်ချိန်… အချိန်တိုင်း哥哥宝贝တယ်။
+မြိုတော်တော်တွေ၊ ပင်လယ်ကမ်းခြေ၊ နေဝင်ချိန်… အချိန်တိုင်း哥哥宝贝တယ်。
 
 ဒီနေ့မှာ 哥哥 宝贝ကိုမေးချင်တယ် —
 
 哥哥နဲ့အတူတူ လက်တွဲပြီး ဘဝလမ်းကြောင်းကိုအတူဖြတ်ဖို စိတ်ရှိပါသလား…? ❤️
-
 `;
 
-    const textElement = document.getElementById("text");
+    const textEl = document.getElementById("text");
+    const envelopeEl = document.getElementById("envelope");
 
-    function openCurtain() {
-      const curtain = document.getElementById("curtain");
-      curtain.style.width = "0";
-      curtain.style.opacity = "0";
+    function openEnvelope() {
+      envelopeEl.style.opacity = "0";
+      envelopeEl.style.transform = "scale(0.8)";
       setTimeout(() => {
-        curtain.remove();
+        envelopeEl.remove();
         showTyping(firstMessage, () => {
-          textElement.classList.add("fade-away");
+          textEl.classList.add("fade-away");
           setTimeout(() => {
-            textElement.innerText = "";
-            textElement.classList.remove("fade-away");
+            textEl.innerText = "";
+            textEl.classList.remove("fade-away");
             showTyping(loveLetter);
           }, 2000);
         });
-        textElement.style.opacity = 1;
-      }, 2000);
+        textEl.style.opacity = 1;
+      }, 1000);
     }
 
     function showTyping(text, callback) {
       let i = 0;
-      textElement.innerText = "";
+      textEl.innerText = "";
       function type() {
         if (i < text.length) {
-          textElement.innerText += text[i];
+          textEl.innerText += text[i];
+          spawnHeart();
           i++;
-          setTimeout(type, 100);
+          setTimeout(type, 80);
         } else if (callback) {
           callback();
         }
       }
       type();
+    }
+
+    function spawnHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerText = '💖';
+      heart.style.left = (50 + Math.random() * 40 - 20) + 'vw';
+      heart.style.top = (50 + Math.random() * 20 - 10) + 'vh';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1000);
     }
   </script>
 </body>
