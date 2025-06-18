@@ -1,149 +1,109 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>给你的一封情书</title>
-  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <title>哥哥的世界</title>
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #000;
+      color: #fff;
       overflow: hidden;
-      font-family: 'Ma Shan Zheng', cursive;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
     }
-    #fireworks {
+
+    #curtain {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      z-index: 9999;
-    }
-    #main-content {
-      display: none;
-      text-align: center;
-      background: linear-gradient(to top, #ffe6e6, #fff);
-      padding-bottom: 50px;
-      z-index: 1;
-    }
-    h1 {
-      font-size: 48px;
-      color: #e60073;
-      margin-top: 40px;
-    }
-    p {
-      font-size: 24px;
-      color: #333;
-      max-width: 600px;
-      margin: 20px auto;
-      line-height: 1.6;
-    }
-    .heart {
-      font-size: 100px;
-      color: red;
-      animation: beat 1s infinite;
-      margin: 20px 0;
-    }
-    @keyframes beat {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-    }
-    .slider img {
-      width: 80%;
-      max-width: 500px;
-      border-radius: 15px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-      animation: fade 4s infinite alternate;
-    }
-    @keyframes fade {
-      from { opacity: 0.5; }
-      to { opacity: 1; }
-    }
-    button {
-      margin-top: 30px;
-      padding: 10px 30px;
-      font-size: 24px;
-      background-color: #ff4d88;
-      color: white;
-      border: none;
-      border-radius: 8px;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(to right, #ff4d88 50%, #ff4d88 50%);
+      z-index: 10;
       cursor: pointer;
+      transition: all 2s ease;
     }
-    button:hover {
-      background-color: #e60073;
+
+    #text {
+      font-size: 36px;
+      white-space: pre-wrap;
+      padding: 40px;
+      max-width: 90%;
+      text-align: center;
+      line-height: 1.6;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .fade-away {
+      animation: fadeOut 2s forwards;
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: translateY(-20px) scale(0.8); }
     }
   </style>
 </head>
 <body>
-  <div id="fireworks"></div>
-  <audio autoplay loop>
-    <source src="music/love.mp3" type="audio/mpeg">
-    您的浏览器不支持音频播放。
-  </audio>
-  <div id="main-content">
-    <h1>我有话想对你说 ❤️</h1>
-    <p>从我们第一次聊天开始，我就知道你对我来说很特别。</p>
-    <p>每一次见面、每一次微笑，都是我心中最温暖的记忆。</p>
-    <p>所以今天我鼓起勇气问你——</p>
-    <div class="heart">❤️</div>
-    <div class="slider">
-      <img src="images/photo1.jpg" alt="回忆" id="slider-image">
-    </div>
-    <button onclick="showLove()">你愿意做我的女朋友吗？</button>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.10.2/dist/fireworks.js"></script>
+  <div id="curtain" onclick="openCurtain()"></div>
+  <div id="text"></div>
+
   <script>
-    function showLove() {
-      alert("我好开心你点了这个按钮！我们一起走下去吧 ❤️");
-    }
-    const images = ['images/photo1.jpg', 'images/photo2.jpg', 'images/photo3.jpg'];
-    let current = 0;
-    setInterval(() => {
-      if (document.getElementById('main-content').style.display === 'block') {
-        current = (current + 1) % images.length;
-        document.getElementById('slider-image').src = images[current];
-      }
-    }, 3000);
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/fireworks-js@2.10.2/dist/fireworks.js";
-    script.onload = () => {
-      const container = document.getElementById('fireworks');
-      const fireworks = new Fireworks.default(container, {
-        autoresize: true,
-        opacity: 0.9,
-        acceleration: 1.05,
-        friction: 0.97,
-        gravity: 1.5,
-        particles: 50,
-        trace: 3,
-        explosion: 5,
-        intensity: 30,
-        flickering: 50,
-        lineStyle: 'round',
-        hue: {
-          min: 0,
-          max: 360
-        },
-        delay: {
-          min: 10,
-          max: 20
-        },
-        rocketsPoint: {
-          min: 0,
-          max: 100
-        }
-      });
-      fireworks.start();
+    const firstMessage = "欢迎来到哥哥的世界❤️";
+    const loveLetter = `
+每一次看到你，
+心跳就像没刹车的火车，
+停不下来。
+
+所以，我想问你……
+
+你愿意走进哥哥的世界，
+让我们一起写下属于我们的故事吗？❤️
+`;
+
+    const textElement = document.getElementById("text");
+
+    function openCurtain() {
+      const curtain = document.getElementById("curtain");
+      curtain.style.width = "0";
+      curtain.style.opacity = "0";
       setTimeout(() => {
-        fireworks.stop();
-        document.getElementById("fireworks").remove();
-        document.getElementById("main-content").style.display = "block";
-      }, 5000);
-    };
-    document.body.appendChild(script);
+        curtain.remove();
+        showTyping(firstMessage, () => {
+          textElement.classList.add("fade-away");
+          setTimeout(() => {
+            textElement.innerText = "";
+            textElement.classList.remove("fade-away");
+            showTyping(loveLetter);
+          }, 2000);
+        });
+        textElement.style.opacity = 1;
+      }, 2000);
+    }
+
+    function showTyping(text, callback) {
+      let i = 0;
+      textElement.innerText = "";
+      function type() {
+        if (i < text.length) {
+          textElement.innerText += text[i];
+          i++;
+          setTimeout(type, 100);
+        } else if (callback) {
+          callback();
+        }
+      }
+      type();
+    }
   </script>
 </body>
 </html>
