@@ -9,86 +9,148 @@
 
     body {
       font-family: 'Courier New', monospace;
-      background-color: #fff0f5;
-      color: #333;
+      background-color: #000;
+      color: #fff;
       overflow: hidden;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
-    }
-
-    #envelope {
-      width: 200px;
-      height: 150px;
-      background: #ff69b4;
-      border-radius: 8px;
-      position: relative;
-      cursor: pointer;
-      transition: all 1s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
+      position: relative;
+    }
+
+    #curtain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(to right, #ff4d88 50%, #ff4d88 50%);
       z-index: 10;
-    }
-
-    #envelope::before {
-      content: "💌";
-      font-size: 48px;
-    }
-
-    #envelope span {
-      font-size: 18px;
-      margin-top: 10px;
-      color: white;
+      cursor: pointer;
+      transition: all 2s ease;
     }
 
     #text {
-      font-size: 24px;
+      font-size: 20px;
       white-space: pre-wrap;
-      padding: 30px;
+      padding: 40px;
       max-width: 90%;
       text-align: center;
-      line-height: 1.8;
-      z-index: 1;
+      line-height: 1.6;
       opacity: 0;
       transition: opacity 1s ease;
-      position: relative;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .fade-away {
+      animation: fadeOut 2s forwards;
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: translateY(-20px) scale(0.8); }
+    }
+
+    .button-container {
+      margin-top: 20px;
+      display: none;
+      gap: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #accept { background-color: #ff4d88; color: white; }
+    #reject { background-color: #999; color: white; }
+
+    .hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 20;
     }
 
     .heart {
       position: absolute;
-      color: pink;
-      font-size: 14px;
-      pointer-events: none;
-      animation: floatUp 1s ease-out forwards;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: float 4s ease-in infinite;
     }
 
-    @keyframes floatUp {
+    .heart::before, .heart::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes float {
       0% {
+        transform: translateY(0) scale(1) rotate(45deg);
         opacity: 1;
-        transform: translateY(0) scale(1);
       }
       100% {
+        transform: translateY(-600px) scale(1.5) rotate(45deg);
         opacity: 0;
-        transform: translateY(-40px) scale(1.5);
       }
+    }
+
+    #talk-button {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #00cc99;
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 21;
     }
   </style>
 </head>
 <body>
-  <div id="envelope" onclick="openEnvelope()">
-    <span>点我打开</span>
-  </div>
+  <div id="curtain" onclick="openCurtain()"></div>
   <div id="text"></div>
+
+  <div class="button-container" id="buttons">
+    <button id="accept" onclick="acceptLove()">接受❤️</button>
+    <button id="reject" onclick="alert('哥哥会尊重宝贝的决定 😊')">拒绝😢</button>
+  </div>
+
+  <button id="talk-button" onclick="talkToGe()">跟哥哥说❤️</button>
+
+  <div class="hearts" id="hearts"></div>
 
   <script>
     const firstMessage = "宝贝ကို哥哥ရဲ့ဘ၀မှကြိုဆိုပါတယ်❤️";
-    const loveLetter = `
-哥哥တို Grade 9 မှာတွေ့ဖူးတယ်။
-အဲဒီတုန်းက哥哥တိုအချင်းချင်းသတိမထားခဲ့မိကြဘူး。
+    const loveLetter = `哥哥哥တို Grade 9 မှာတွေ့ဖူးတယ်။
+အဲဒီတုန်းက哥哥တိုအချင်းချင်းသတိမထားခဲ့မိကြဘူး။
 
 နောက်မှာတော့ 哥哥တိုဟာ မတူတဲ့လမ်းခရီးမျိုးစုံကို သွားခဲ့ရတယ် ကိုယ်စီဘ၀ပုံပြင်တွေနဲ့။ဒါပေမယ့် ကံက 哥哥နဲ့ 宝贝ကို ပြန်လည်တွေ့စေခဲ့တယ်။တစ်မြိုတည်းမှာဆိုပေမဲ့ သူငယ်ချင်းတစ်ဦးကြောင့်၊ 哥哥 နဲ့ 宝贝 ပြန်တွေ့ခဲ့တယ်။
 
@@ -96,47 +158,48 @@
 ဒါပေမယ့် တစ်ခုတော့သိတယ် —
 宝贝နဲ့ စကားစပြောတဲ့အချိန်ကစပြီး 宝贝က哥哥ရဲ့စိတ်ထဲတစ်ဖြည်းဖြည်းရောက်လာ
 
-哥哥က宝贝ကိုတစ်ဖြည်းဖြည်းနဲ့ပိုပိုချစ်လာပြီ🎈。
-宝贝ရဲ့အသံ၊ 宝贝ရဲ့အပြုံး… 宝贝ဆိုတာနဲ့ကိုအရမ်းတယ်。
+哥哥က宝贝ကိုတစ်ဖြည်းဖြည်းနဲ့ပိုပိုချစ်လာပြီ❤️။
+宝贝ရဲ့အသံ၊ 宝贝ရဲ့အပြုံး… 宝贝ဆိုတာနဲ့ကိုအရမ်းတယ်။
 
-哥哥 宝贝နဲ့အတူ ခရီးသွားချင်တယ် —🩷
+哥哥 宝贝နဲ့အတူ ခရီးသွားချင်တယ် —✈️
 宝贝နဲ့အတူတူကမ္ဘာပတ်ချင်တယ်။
-မြိုတော်တော်တွေ၊ ပင်လယ်ကမ်းခြေ၊ နေဝင်ချိန်… အချိန်တိုင်း哥哥宝贝တယ်。
+မြိုတော်တော်တွေ၊ ပင်လယ်ကမ်းခြေ၊ နေဝင်ချိန်… အချိန်တိုင်း哥哥宝贝တယ်။
 
 ဒီနေ့မှာ 哥哥 宝贝ကိုမေးချင်တယ် —
 
-哥哥နဲ့အတူတူ လက်တွဲပြီး ဘဝလမ်းကြောင်းကိုအတူဖြတ်ဖို စိတ်ရှိပါသလား…? ❤️
-`;
+哥哥နဲ့အတူတူ လက်တွဲပြီး ဘဝလမ်းကြောင်းကိုအတူဖြတ်ဖို စိတ်ရှိပါသလား…? ❤️`;
 
-    const textEl = document.getElementById("text");
-    const envelopeEl = document.getElementById("envelope");
+    const textElement = document.getElementById("text");
 
-    function openEnvelope() {
-      envelopeEl.style.opacity = "0";
-      envelopeEl.style.transform = "scale(0.8)";
+    function openCurtain() {
+      const curtain = document.getElementById("curtain");
+      curtain.style.width = "0";
+      curtain.style.opacity = "0";
       setTimeout(() => {
-        envelopeEl.remove();
+        curtain.remove();
         showTyping(firstMessage, () => {
-          textEl.classList.add("fade-away");
+          textElement.classList.add("fade-away");
           setTimeout(() => {
-            textEl.innerText = "";
-            textEl.classList.remove("fade-away");
-            showTyping(loveLetter);
+            textElement.innerText = "";
+            textElement.classList.remove("fade-away");
+            showTyping(loveLetter, () => {
+              document.getElementById("buttons").style.display = "flex";
+            });
           }, 2000);
         });
-        textEl.style.opacity = 1;
-      }, 1000);
+        textElement.style.opacity = 1;
+      }, 2000);
     }
 
     function showTyping(text, callback) {
       let i = 0;
-      textEl.innerText = "";
+      textElement.innerText = "";
       function type() {
         if (i < text.length) {
-          textEl.innerText += text[i];
-          spawnHeart();
+          textElement.innerText += text[i];
+          textElement.scrollTop = textElement.scrollHeight; // 自动滚动
           i++;
-          setTimeout(type, 80);
+          setTimeout(type, 60);
         } else if (callback) {
           callback();
         }
@@ -144,14 +207,26 @@
       type();
     }
 
-    function spawnHeart() {
-      const heart = document.createElement('div');
-      heart.className = 'heart';
-      heart.innerText = '💖';
-      heart.style.left = (50 + Math.random() * 40 - 20) + 'vw';
-      heart.style.top = (50 + Math.random() * 20 - 10) + 'vh';
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 1000);
+    function acceptLove() {
+      document.getElementById("buttons").style.display = "none";
+      createHearts();
+      document.getElementById("talk-button").style.display = "inline-block";
+    }
+
+    function talkToGe() {
+      window.location.href = "https://t.me/CX8_Star";
+    }
+
+    function createHearts() {
+      const heartsContainer = document.getElementById("hearts");
+      for (let i = 0; i < 50; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDelay = Math.random() * 2 + "s";
+        heartsContainer.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+      }
     }
   </script>
 </body>
