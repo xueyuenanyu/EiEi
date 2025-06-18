@@ -1,44 +1,39 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>给你的一封情书</title>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
-
-  <!-- 烟花 CSS -->
   <style>
-    body {
+    body, html {
       margin: 0;
       padding: 0;
+      height: 100%;
       overflow: hidden;
       font-family: 'Ma Shan Zheng', cursive;
-      background: #000;
     }
-
     #fireworks {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       background-color: black;
       z-index: 9999;
     }
-
     #main-content {
       display: none;
       text-align: center;
       background: linear-gradient(to top, #ffe6e6, #fff);
       padding-bottom: 50px;
+      z-index: 1;
     }
-
     h1 {
       font-size: 48px;
       color: #e60073;
       margin-top: 40px;
     }
-
     p {
       font-size: 24px;
       color: #333;
@@ -46,19 +41,16 @@
       margin: 20px auto;
       line-height: 1.6;
     }
-
     .heart {
       font-size: 100px;
       color: red;
       animation: beat 1s infinite;
       margin: 20px 0;
     }
-
     @keyframes beat {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.2); }
     }
-
     .slider img {
       width: 80%;
       max-width: 500px;
@@ -66,12 +58,10 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.2);
       animation: fade 4s infinite alternate;
     }
-
     @keyframes fade {
       from { opacity: 0.5; }
       to { opacity: 1; }
     }
-
     button {
       margin-top: 30px;
       padding: 10px 30px;
@@ -82,55 +72,33 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #e60073;
     }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: 9999;
-    }
   </style>
 </head>
-
 <body>
-  <!-- 🎆 烟花开场容器 -->
   <div id="fireworks"></div>
-
-  <!-- 🎶 背景音乐 -->
   <audio autoplay loop>
     <source src="music/love.mp3" type="audio/mpeg">
     您的浏览器不支持音频播放。
   </audio>
-
-  <!-- 🌸 正文内容 -->
   <div id="main-content">
     <h1>我有话想对你说 ❤️</h1>
     <p>从我们第一次聊天开始，我就知道你对我来说很特别。</p>
     <p>每一次见面、每一次微笑，都是我心中最温暖的记忆。</p>
     <p>所以今天我鼓起勇气问你——</p>
-
     <div class="heart">❤️</div>
-
     <div class="slider">
       <img src="images/photo1.jpg" alt="回忆" id="slider-image">
     </div>
-
     <button onclick="showLove()">你愿意做我的女朋友吗？</button>
   </div>
-
-  <!-- 🌸 Sakura JS 飘樱花 -->
-  <script src="https://cdn.jsdelivr.net/npm/sakura-js/dist/sakura.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.10.2/dist/fireworks.js"></script>
   <script>
     function showLove() {
       alert("我好开心你点了这个按钮！我们一起走下去吧 ❤️");
     }
-
-    // 图片轮播
     const images = ['images/photo1.jpg', 'images/photo2.jpg', 'images/photo3.jpg'];
     let current = 0;
     setInterval(() => {
@@ -139,8 +107,6 @@
         document.getElementById('slider-image').src = images[current];
       }
     }, 3000);
-
-    // 开场烟花插件
     const script = document.createElement("script");
     script.src = "https://cdn.jsdelivr.net/npm/fireworks-js@2.10.2/dist/fireworks.js";
     script.onload = () => {
@@ -171,13 +137,10 @@
         }
       });
       fireworks.start();
-
-      // 停止烟花并显示正文内容（5秒后）
       setTimeout(() => {
         fireworks.stop();
         document.getElementById("fireworks").remove();
         document.getElementById("main-content").style.display = "block";
-        new Sakura('body');
       }, 5000);
     };
     document.body.appendChild(script);
